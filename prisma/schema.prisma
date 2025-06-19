@@ -21,6 +21,8 @@ model Client {
   subscriptionTier String
   apiKeys         Json
   reviews         Review[]
+  apiKeyRecords   APIKey[]
+  auditLogs       AuditLog[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
 }
@@ -34,6 +36,56 @@ model Review {
   mediaUrls Json?
   status    String
   client    Client   @relation(fields: [clientId], references: [id])
+  media     Media[]
+  auditLogs AuditLog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  password  String
+  name      String?
+  role      String   // e.g., 'admin', 'client'
+  apiKeys   APIKey[]
+  auditLogs AuditLog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model APIKey {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  clientId  String?
+  client    Client?  @relation(fields: [clientId], references: [id])
+  createdAt DateTime @default(now())
+  expiresAt DateTime?
+  isActive  Boolean  @default(true)
+}
+
+model Media {
+  id          String   @id @default(cuid())
+  url         String   // S3 or other storage URL
+  thumbnail   String?  // Optional thumbnail URL
+  type        String   // e.g., 'image', 'video', 'document'
+  uploadedBy  String
+  reviewId    String?
+  review      Review?  @relation(fields: [reviewId], references: [id])
+  createdAt   DateTime @default(now())
+}
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  action      String   // e.g., 'CREATE_REVIEW', 'DELETE_MEDIA', etc.
+  userId      String?
+  user        User?    @relation(fields: [userId], references: [id])
+  clientId    String?
+  client      Client?  @relation(fields: [clientId], references: [id])
+  reviewId    String?
+  review      Review?  @relation(fields: [reviewId], references: [id])
+  details     Json?
+  createdAt   DateTime @default(now())
 }

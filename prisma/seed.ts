@@ -1,4 +1,4 @@
-import prisma from "@/lib/prisma";
+import prisma from "../src/lib/prisma";
 
 async function main() {
   // Create clients
@@ -19,6 +19,43 @@ async function main() {
       brandingConfig: {},
       subscriptionTier: "premium",
       apiKeys: {},
+    },
+  });
+
+  // Create users
+  const adminUser = await prisma.user.create({
+    data: {
+      email: "admin@example.com",
+      password: "adminpass", // In production, use hashed passwords!
+      name: "Admin User",
+      role: "admin",
+    },
+  });
+
+  const clientUser = await prisma.user.create({
+    data: {
+      email: "client@example.com",
+      password: "clientpass",
+      name: "Client User",
+      role: "client",
+    },
+  });
+
+  // Create API keys
+  const adminApiKey = await prisma.aPIKey.create({
+    data: {
+      key: "admin-api-key-123",
+      userId: adminUser.id,
+      isActive: true,
+    },
+  });
+
+  const clientApiKey = await prisma.aPIKey.create({
+    data: {
+      key: "client-api-key-456",
+      userId: clientUser.id,
+      clientId: client1.id,
+      isActive: true,
     },
   });
 
@@ -53,7 +90,30 @@ async function main() {
     },
   });
 
-  // Add more seed data as needed
+  // Create media files for reviews
+  const review1 = await prisma.review.findFirst({ where: { userId: "user1" } });
+  if (review1) {
+    await prisma.media.create({
+      data: {
+        url: "https://s3.amazonaws.com/bucket/image1.jpg",
+        thumbnail: "https://s3.amazonaws.com/bucket/thumb1.jpg",
+        type: "image",
+        uploadedBy: adminUser.id,
+        reviewId: review1.id,
+      },
+    });
+  }
+
+  // Create audit logs
+  await prisma.auditLog.create({
+    data: {
+      action: "CREATE_REVIEW",
+      userId: adminUser.id,
+      clientId: client1.id,
+      reviewId: review1 ? review1.id : undefined,
+      details: { message: "Admin created a review for Client One." },
+    },
+  });
 }
 
 main()
