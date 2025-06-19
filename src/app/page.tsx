@@ -10,7 +10,7 @@ export default function Home() {
       const response = await fetch("/api/health");
       const data = await response.json();
       setHealthStatus(data.status);
-    } catch (error) {
+    } catch {
       setHealthStatus("Error fetching health status");
     }
   };
