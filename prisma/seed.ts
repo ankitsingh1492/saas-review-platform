@@ -1,7 +1,30 @@
 import prisma from "../src/lib/prisma";
 
 async function main() {
-  // Create clients
+  // Create users first
+  const adminUser = await prisma.user.upsert({
+    where: { email: "admin@example.com" },
+    update: {},
+    create: {
+      email: "admin@example.com",
+      password: "adminpass",
+      name: "Admin User",
+      role: "admin",
+    },
+  });
+
+  const clientUser = await prisma.user.upsert({
+    where: { email: "client@example.com" },
+    update: {},
+    create: {
+      email: "client@example.com",
+      password: "clientpass",
+      name: "Client User",
+      role: "client",
+    },
+  });
+
+  // Create clients, linking to their creator
   const client1 = await prisma.client.create({
     data: {
       name: "Client One",
@@ -9,6 +32,7 @@ async function main() {
       brandingConfig: {},
       subscriptionTier: "basic",
       apiKeys: {},
+      createdBy: { connect: { id: clientUser.id } }, // clientUser is the creator
     },
   });
 
@@ -19,25 +43,7 @@ async function main() {
       brandingConfig: {},
       subscriptionTier: "premium",
       apiKeys: {},
-    },
-  });
-
-  // Create users
-  const adminUser = await prisma.user.create({
-    data: {
-      email: "admin@example.com",
-      password: "adminpass", // In production, use hashed passwords!
-      name: "Admin User",
-      role: "admin",
-    },
-  });
-
-  const clientUser = await prisma.user.create({
-    data: {
-      email: "client@example.com",
-      password: "clientpass",
-      name: "Client User",
-      role: "client",
+      createdBy: { connect: { id: clientUser.id } }, // clientUser is the creator
     },
   });
 
@@ -59,10 +65,10 @@ async function main() {
     },
   });
 
-  // Create reviews
-  await prisma.review.create({
+  // Create reviews (using real user IDs)
+  const review1 = await prisma.review.create({
     data: {
-      userId: "user1",
+      userId: adminUser.id,
       clientId: client1.id,
       rating: 5,
       content: "Excellent service!",
@@ -70,9 +76,9 @@ async function main() {
     },
   });
 
-  await prisma.review.create({
+  const review2 = await prisma.review.create({
     data: {
-      userId: "user2",
+      userId: clientUser.id,
       clientId: client2.id,
       rating: 4,
       content: "Very good, but room for improvement.",
@@ -80,9 +86,9 @@ async function main() {
     },
   });
 
-  await prisma.review.create({
+  const review3 = await prisma.review.create({
     data: {
-      userId: "user3",
+      userId: clientUser.id,
       clientId: client1.id,
       rating: 2,
       content: "Not satisfied with the service.",
@@ -91,18 +97,15 @@ async function main() {
   });
 
   // Create media files for reviews
-  const review1 = await prisma.review.findFirst({ where: { userId: "user1" } });
-  if (review1) {
-    await prisma.media.create({
-      data: {
-        url: "https://s3.amazonaws.com/bucket/image1.jpg",
-        thumbnail: "https://s3.amazonaws.com/bucket/thumb1.jpg",
-        type: "image",
-        uploadedBy: adminUser.id,
-        reviewId: review1.id,
-      },
-    });
-  }
+  await prisma.media.create({
+    data: {
+      url: "https://s3.amazonaws.com/bucket/image1.jpg",
+      thumbnail: "https://s3.amazonaws.com/bucket/thumb1.jpg",
+      type: "image",
+      uploadedBy: adminUser.id,
+      reviewId: review1.id,
+    },
+  });
 
   // Create audit logs
   await prisma.auditLog.create({
@@ -110,7 +113,7 @@ async function main() {
       action: "CREATE_REVIEW",
       userId: adminUser.id,
       clientId: client1.id,
-      reviewId: review1 ? review1.id : undefined,
+      reviewId: review1.id,
       details: { message: "Admin created a review for Client One." },
     },
   });

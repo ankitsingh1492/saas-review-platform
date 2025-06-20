@@ -25,6 +25,10 @@ model Client {
   auditLogs       AuditLog[]
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
+
+  // New fields for relationship
+  createdById     String
+  createdBy       User     @relation("UserClients", fields: [createdById], references: [id])
 }
 
 model Review {
@@ -52,6 +56,9 @@ model User {
   auditLogs AuditLog[]
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+
+  // New field for relationship
+  clients   Client[] @relation("UserClients")
 }
 
 model APIKey {
