@@ -1,14 +1,19 @@
 "use client";
 import { signIn } from "next-auth/react";
-import { useState } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 
-export default function SignInPage() {
-  const [isSignUp, setIsSignUp] = useState(false);
+function SignInForm() {
+  const params = useSearchParams();
+  const isSignUpParam = params.get("signup") === "true";
+  const [isSignUp, setIsSignUp] = useState(isSignUpParam);
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [loading, setLoading] = useState(false);
-  const params = useSearchParams();
   const error = params.get("error");
+
+  useEffect(() => {
+    setIsSignUp(isSignUpParam);
+  }, [isSignUpParam]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -118,5 +123,13 @@ export default function SignInPage() {
         )}
       </div>
     </div>
+  );
+}
+
+export default function SignInPage() {
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <SignInForm />
+    </Suspense>
   );
 }
