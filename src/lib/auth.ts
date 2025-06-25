@@ -21,7 +21,14 @@ export const authOptions: NextAuthOptions = {
         name: { label: "Name", type: "text", optional: true },
       },
       async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) return null;
+        if (!credentials) {
+          throw new Error("no-credentials");
+        }
+        const { email, password } = credentials;
+
+        if (!email || !password) {
+          throw new Error("no-credentials");
+        }
         const user = await prisma.user.findUnique({
           where: { email: credentials.email },
         });
@@ -50,6 +57,22 @@ export const authOptions: NextAuthOptions = {
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
+  },
+  callbacks: {
+    session: async ({ session, token }) => {
+      // console.log(token);
+      // console.log(session);
+      session.user = {
+        id: token.sub,
+        email: token.email,
+        name: token.name,
+        // @ts-expect-error - token.user is not typed
+        ...(token || session).user,
+      };
+      // eslint-disable-next-line no-console
+      console.log(session);
+      return session;
+    },
   },
 };
 
