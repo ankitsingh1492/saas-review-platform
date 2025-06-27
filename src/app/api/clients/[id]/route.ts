@@ -2,18 +2,22 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
-
+import { Prisma } from "@prisma/client";
 // Get a single client by ID
 export async function GET(
-  _request: Request,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
-    const client = await prisma.client.findUnique({ where: { id: params.id } });
+    const client = await prisma.client.findUnique({ where: { id: id } });
     if (!client) {
       return NextResponse.json({ error: "Client not found" }, { status: 404 });
     }
@@ -26,46 +30,97 @@ export async function GET(
   }
 }
 
-// Update a client by ID
 export async function PUT(
   request: Request,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
-    const data = await request.json();
-    const client = await prisma.client.update({
-      where: { id: params.id },
-      data,
+    const body = await request.json();
+
+    const updatedClient = await prisma.client.update({
+      where: { id: id },
+      data: body,
     });
-    return NextResponse.json(client);
+
+    if (!updatedClient) {
+      return NextResponse.json(
+        { error: "Client not found or update failed" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(updatedClient);
   } catch (error) {
+    console.error("Error updating client:", error);
     return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 400 }
+      { error: (error as Error).message || "Failed to update client" },
+      { status: 500 }
     );
   }
 }
 
 // Delete a client by ID
 export async function DELETE(
-  _request: Request,
-  { params }: { params: { id: string } }
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
 ) {
+  const resolvedParams = await params;
+  const { id } = resolvedParams;
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
-    await prisma.client.delete({ where: { id: params.id } });
-    return NextResponse.json({ message: "Client deleted" });
+    const deletedClient = await prisma.client.delete({
+      where: { id: id },
+    });
+
+    if (!deletedClient) {
+      return NextResponse.json(
+        { error: "Client not found or already deleted" },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json({
+      message: `Client with ID ${id} deleted successfully`,
+    });
   } catch (error) {
-    return NextResponse.json(
-      { error: (error as Error).message },
-      { status: 400 }
-    );
+    console.error("Error deleting client:", error);
+    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      console.error("Prisma known error code:", error.code);
+      console.error("Prisma known error message:", error.message);
+
+      if (error.code === "P2002") {
+        console.error("Unique constraint violation:", error.meta?.target);
+        return new Response(JSON.stringify({ error: "Duplicate entry" }), {
+          status: 409,
+        });
+      } else if (error.code === "P2025") {
+        console.error("Record not found:", error.meta?.cause);
+        return new Response(JSON.stringify({ error: "Record not found" }), {
+          status: 404,
+        });
+      }
+      return new Response(
+        JSON.stringify({ error: "Prisma operation failed" }),
+        { status: 400 }
+      );
+    } else {
+      console.error("An unexpected error occurred:", error);
+      return new Response(JSON.stringify({ error: "Internal Server Error" }), {
+        status: 500,
+      });
+    }
   }
 }
