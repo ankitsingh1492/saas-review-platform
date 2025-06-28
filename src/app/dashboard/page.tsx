@@ -1,32 +1,50 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
+import prisma from "@/lib/prisma";
+import AnimatedBackground from "./AnimatedBackground";
+import DashboardHeader from "./DashboardHeader";
+import ClientsSection from "./ClientsSection";
+import { Client, SessionUser } from "@/types";
+
+async function getClients(): Promise<Client[]> {
+  const session = await getServerSession(authOptions);
+  if (!session) return [];
+
+  try {
+    const userId = (session.user as SessionUser)?.id;
+    if (!userId) return [];
+
+    const clients = await prisma.client.findMany({
+      where: { createdById: userId },
+      select: {
+        id: true,
+        name: true,
+        domain: true,
+      },
+    });
+
+    return clients;
+  } catch (error) {
+    console.error("Error fetching clients:", error);
+    return [];
+  }
+}
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect("/auth/signin");
   }
+  const clients = await getClients();
+
   return (
-    <div className="min-h-screen flex flex-col items-center justify-center bg-[#18191A] text-white px-4">
-      <div className="w-full max-w-md bg-[#23272F] rounded-xl shadow-lg p-8 flex flex-col gap-6 items-center">
-        <h1 className="text-3xl font-bold mb-4">Dashboard</h1>
-        <p className="mb-4">
-          Signed in as{" "}
-          <span className="font-mono text-violet-400">
-            {session.user?.email}
-          </span>
-        </p>
-        <form action="/api/auth/signout" method="POST">
-          <button
-            type="submit"
-            className="w-full bg-[#6C63FF] hover:bg-[#5548c8] text-white font-semibold py-2 rounded-md transition"
-            formAction="/api/auth/signout?callbackUrl=/"
-          >
-            Logout
-          </button>
-        </form>
-      </div>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-white relative overflow-hidden">
+      <AnimatedBackground />
+      <DashboardHeader userEmail={session.user?.email || ""} />
+      <main className="relative z-10 flex flex-col items-center min-h-screen pt-32 px-6">
+        <ClientsSection clients={clients} />
+      </main>
     </div>
   );
 }

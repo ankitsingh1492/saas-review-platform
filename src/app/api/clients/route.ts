@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { SessionUser } from "@/types";
 
 // Create a new client
 export async function POST(request: Request) {
@@ -10,11 +11,49 @@ export async function POST(request: Request) {
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
+
   try {
     const data = await request.json();
-    const client = await prisma.client.create({ data });
+    const userId = (session.user as SessionUser)?.id;
+
+    if (!userId) {
+      return NextResponse.json(
+        { error: "User ID not found in session" },
+        { status: 401 }
+      );
+    }
+
+    // Validate required fields
+    if (!data.name || !data.domain || !data.subscriptionTier) {
+      return NextResponse.json(
+        { error: "Missing required fields: name, domain, subscriptionTier" },
+        { status: 400 }
+      );
+    }
+
+    // Create client with all required fields
+    const client = await prisma.client.create({
+      data: {
+        name: data.name,
+        domain: data.domain,
+        subscriptionTier: data.subscriptionTier,
+        brandingConfig: data.brandingConfig || {
+          primaryColor: "#6C63FF",
+          secondaryColor: "#5548c8",
+          logoUrl: "",
+          companyName: data.name,
+        },
+        apiKeys: data.apiKeys || {
+          public: "",
+          secret: "",
+        },
+        createdById: userId,
+      },
+    });
+
     return NextResponse.json(client, { status: 201 });
   } catch (error) {
+    console.error("Error creating client:", error);
     return NextResponse.json(
       { error: (error as Error).message },
       { status: 400 }
@@ -33,7 +72,7 @@ export async function GET(request: Request) {
     const createdByMe = searchParams.get("createdByMe");
     let clients;
     if (createdByMe === "true") {
-      const userId = session.user && (session.user as any).id;
+      const userId = (session.user as SessionUser)?.id;
       if (!userId) {
         return NextResponse.json(
           { error: "User ID not found in session" },
