@@ -4,7 +4,7 @@ import { ClientListProps } from "@/types";
 export default function ClientList({ clients }: ClientListProps) {
   if (clients.length === 0) {
     return (
-      <div className="col-span-full text-center text-slate-400">
+      <div className="col-span-full text-center text-secondary">
         No clients found.
       </div>
     );

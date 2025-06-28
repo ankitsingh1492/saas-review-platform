@@ -76,13 +76,13 @@ export default function CreateClientModal({
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-slate-800 rounded-xl p-6 w-full max-w-md mx-4 shadow-2xl">
+    <div className="fixed inset-0 modal-backdrop flex items-center justify-center z-50">
+      <div className="modal-content rounded-xl p-6 w-full max-w-md mx-4 shadow-modal">
         <div className="flex items-center justify-between mb-6">
-          <h2 className="text-xl font-bold text-white">Create New Client</h2>
+          <h2 className="text-xl font-bold text-primary">Create New Client</h2>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white transition-colors"
+            className="text-secondary hover:text-primary transition-colors"
           >
             <svg
               className="w-6 h-6"
@@ -104,7 +104,7 @@ export default function CreateClientModal({
           <div>
             <label
               htmlFor="name"
-              className="block text-sm font-medium text-slate-300 mb-2"
+              className="block text-sm font-medium text-primary mb-2"
             >
               Client Name *
             </label>
@@ -115,7 +115,7 @@ export default function CreateClientModal({
               value={formData.name}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              className="w-full px-3 py-2 rounded-lg input-primary focus-ring"
               placeholder="Enter client name"
             />
           </div>
@@ -123,7 +123,7 @@ export default function CreateClientModal({
           <div>
             <label
               htmlFor="domain"
-              className="block text-sm font-medium text-slate-300 mb-2"
+              className="block text-sm font-medium text-primary mb-2"
             >
               Domain *
             </label>
@@ -134,7 +134,7 @@ export default function CreateClientModal({
               value={formData.domain}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              className="w-full px-3 py-2 rounded-lg input-primary focus-ring"
               placeholder="example.com"
             />
           </div>
@@ -142,7 +142,7 @@ export default function CreateClientModal({
           <div>
             <label
               htmlFor="subscriptionTier"
-              className="block text-sm font-medium text-slate-300 mb-2"
+              className="block text-sm font-medium text-primary mb-2"
             >
               Subscription Tier *
             </label>
@@ -152,7 +152,7 @@ export default function CreateClientModal({
               value={formData.subscriptionTier}
               onChange={handleChange}
               required
-              className="w-full px-3 py-2 rounded-lg bg-slate-700 text-white border border-slate-600 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:border-transparent"
+              className="w-full px-3 py-2 rounded-lg input-primary focus-ring"
             >
               <option value="starter">Starter</option>
               <option value="professional">Professional</option>
@@ -161,7 +161,7 @@ export default function CreateClientModal({
           </div>
 
           {error && (
-            <div className="text-red-400 text-sm bg-red-400/10 border border-red-400/20 rounded-lg p-3">
+            <div className="text-error text-sm bg-error/10 border border-error/20 rounded-lg p-3">
               {error}
             </div>
           )}
@@ -170,14 +170,14 @@ export default function CreateClientModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 px-4 py-2 rounded-lg border border-slate-600 text-slate-300 hover:border-slate-500 hover:text-white transition-colors"
+              className="btn-secondary flex-1 px-4 py-2 rounded-lg"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium hover:from-violet-500 hover:to-purple-500 transition-all duration-200 shadow-lg hover:shadow-violet-500/25 disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary flex-1 px-4 py-2 rounded-lg disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {loading ? "Creating..." : "Create Client"}
             </button>

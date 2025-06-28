@@ -12,7 +12,7 @@ export default function SearchInput({ onSearch }: SearchInputProps) {
     <input
       type="text"
       placeholder="Search clients by name or domain"
-      className="w-full mb-6 px-4 py-2 rounded-lg bg-slate-800/60 text-white placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-violet-500"
+      className="w-full mb-6 px-4 py-2 rounded-lg input-primary focus-ring"
       value={value}
       onChange={handleChange}
     />

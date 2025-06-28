@@ -5,11 +5,11 @@ export default function DashboardHeader({
   children,
 }: DashboardHeaderProps) {
   return (
-    <header className="fixed w-full z-50 bg-slate-900/90 backdrop-blur-md border-b border-slate-800">
+    <header className="fixed w-full z-50 header-primary">
       <div className="max-w-7xl mx-auto flex items-center justify-between px-6 py-4">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <div className="w-10 h-10 bg-gradient-to-r from-violet-500 to-purple-500 rounded-xl flex items-center justify-center shadow-lg">
+            <div className="w-10 h-10 bg-gradient-to-r from-accent-primary to-accent-secondary rounded-xl flex items-center justify-center shadow-lg">
               <svg
                 width="24"
                 height="24"
@@ -23,23 +23,23 @@ export default function DashboardHeader({
                 />
               </svg>
             </div>
-            <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-ping"></div>
+            <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent-primary rounded-full animate-ping-slow"></div>
           </div>
-          <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
+          <span className="text-2xl font-bold bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
             ReviewCraft
           </span>
         </div>
         <div className="flex items-center gap-4">
           {userEmail && (
-            <span className="text-slate-300 text-sm hidden md:inline">
+            <span className="text-text-secondary text-sm hidden md:inline">
               Signed in as{" "}
-              <span className="font-mono text-violet-400">{userEmail}</span>
+              <span className="font-mono text-text-primary">{userEmail}</span>
             </span>
           )}
           <form action="/api/auth/signout" method="POST">
             <button
               type="submit"
-              className="px-4 py-2 rounded-lg bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium hover:from-violet-500 hover:to-purple-500 transition-all duration-200 shadow-lg hover:shadow-violet-500/25"
+              className="btn-primary px-4 py-2 rounded-lg font-medium"
               formAction="/api/auth/signout?callbackUrl=/"
             >
               Logout
