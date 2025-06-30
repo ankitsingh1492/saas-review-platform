@@ -187,6 +187,12 @@ a {
   box-shadow: 0 4px 6px -1px var(--shadow-secondary);
 }
 
+.card-primary:hover {
+  background-color: var(--card-primary);
+  box-shadow: 0 4px 14px 0 var(--shadow-primary);
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
 /* Modal styles */
 .modal-backdrop {
   background-color: var(--overlay);
