@@ -51,7 +51,7 @@ export default function LandingPage() {
               <div className="absolute -top-1 -right-1 w-3 h-3 bg-cyan-400 rounded-full animate-ping"></div>
             </div>
             <span className="text-2xl font-bold bg-gradient-to-r from-white to-slate-300 bg-clip-text text-transparent">
-              ReviewCraft
+              {process.env.NEXT_PUBLIC_APP_NAME}
             </span>
           </div>
 
@@ -112,9 +112,11 @@ export default function LandingPage() {
           {/* Subtitle */}
           <p className="text-xl sm:text-2xl text-slate-400 max-w-3xl mx-auto mb-12 leading-relaxed">
             Stop losing potential customers to poor reviews.{" "}
-            <span className="text-white font-semibold">ReviewCraft</span> helps
-            you collect, manage, and showcase authentic customer testimonials
-            that convert visitors into buyers.
+            <span className="text-white font-semibold">
+              {process.env.NEXT_PUBLIC_APP_NAME}
+            </span>{" "}
+            helps you collect, manage, and showcase authentic customer
+            testimonials that convert visitors into buyers.
           </p>
 
           {/* CTA Buttons */}
@@ -208,10 +210,13 @@ export default function LandingPage() {
                   />
                 </svg>
               </div>
-              <span className="font-bold text-slate-300">ReviewCraft</span>
+              <span className="font-bold text-slate-300">
+                {process.env.NEXT_PUBLIC_APP_NAME}
+              </span>
             </div>
             <p className="text-slate-500 text-sm">
-              © {new Date().getFullYear()} ReviewCraft. All rights reserved.
+              © {new Date().getFullYear()} {process.env.NEXT_PUBLIC_APP_NAME}.
+              All rights reserved.
             </p>
             <div className="flex gap-6 text-sm">
               <a

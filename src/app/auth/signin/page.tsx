@@ -36,7 +36,9 @@ function SignInForm() {
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#18191A] text-white px-4">
       <div className="w-full max-w-md bg-[#23272F] rounded-xl shadow-lg p-8 flex flex-col gap-6">
         <h1 className="text-3xl font-bold text-center mb-2">
-          {isSignUp ? "Sign up for Reviewly" : "Sign in to Reviewly"}
+          {isSignUp
+            ? "Sign up for " + process.env.NEXT_PUBLIC_APP_NAME
+            : "Sign in to " + process.env.NEXT_PUBLIC_APP_NAME}
         </h1>
         <button
           className="w-full flex items-center justify-center gap-2 bg-white text-black rounded-md py-2 font-semibold hover:bg-gray-200 transition mb-4"

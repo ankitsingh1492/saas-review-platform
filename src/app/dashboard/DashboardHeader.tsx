@@ -26,7 +26,7 @@ export default function DashboardHeader({
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-accent-primary rounded-full animate-ping-slow"></div>
           </div>
           <span className="text-2xl font-bold bg-gradient-to-r from-text-primary to-text-secondary bg-clip-text text-transparent">
-            ReviewCraft
+            {process.env.NEXT_PUBLIC_APP_NAME}
           </span>
         </div>
         <div className="flex items-center gap-4">
