@@ -2,7 +2,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import prisma from "@/lib/prisma";
-import DashboardHeader from "./DashboardHeader";
+import DashboardHeader from "@/lib/ui/DashboardHeader";
 import ClientsSection from "./ClientsSection";
 import { Client, SessionUser } from "@/types";
 
