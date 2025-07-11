@@ -8,7 +8,7 @@ import DashboardHeader from "@/lib/ui/DashboardHeader";
 import ClientDashboard from "./components/ClientDashboard";
 
 interface PageProps {
-  params: { clientName: string };
+  params: Promise<{ clientName: string }>;
 }
 
 async function getClientByName(name: string): Promise<Client | null> {
@@ -44,10 +44,11 @@ export default async function ClientDetailsPage({ params }: PageProps) {
     redirect("/auth/signin");
   }
 
-  const decodedClientName = decodeURIComponent(params.clientName).replace(
-    /-/g,
-    " "
-  );
+  const resolvedParams = await params;
+  const decodedClientName = decodeURIComponent(
+    resolvedParams.clientName
+  ).replace(/-/g, " ");
+
   const client = await getClientByName(decodedClientName);
   if (!client) {
     return (
