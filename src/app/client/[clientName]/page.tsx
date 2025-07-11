@@ -39,16 +39,15 @@ async function getReviewsByClientId(clientId: string): Promise<Review[]> {
 }
 
 export default async function ClientDetailsPage({ params }: PageProps) {
-  const resolvedParams = await params;
-
   const session = await getServerSession(authOptions);
   if (!session) {
     redirect("/auth/signin");
   }
 
-  const decodedClientName = decodeURIComponent(
-    resolvedParams.clientName
-  ).replace(/-/g, " ");
+  const decodedClientName = decodeURIComponent(params.clientName).replace(
+    /-/g,
+    " "
+  );
   const client = await getClientByName(decodedClientName);
   if (!client) {
     return (
