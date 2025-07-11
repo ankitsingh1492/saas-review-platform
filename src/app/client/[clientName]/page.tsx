@@ -5,7 +5,7 @@ import prisma from "@/lib/prisma";
 import { Review, Client } from "@/types";
 
 import DashboardHeader from "@/lib/ui/DashboardHeader";
-import ClientDashboard from "./components/ClientDashboard";
+import ClientPageContent from "./components/ClientPageContent";
 
 interface PageProps {
   params: Promise<{ clientName: string }>;
@@ -67,18 +67,7 @@ export default async function ClientDetailsPage({ params }: PageProps) {
   return (
     <>
       <DashboardHeader userEmail={session.user?.email || ""} />
-      <div className="min-h-screen bg-dashboard text-white pt-20">
-        <div className="max-w-7xl mx-auto">
-          <div className="flex h-[calc(100vh-5rem)]">
-            {/* Sidebar with Client Info and Tabs */}
-
-            {/* Main content area */}
-            <main className="flex-1 h-full overflow-y-auto">
-              <ClientDashboard client={client} reviews={reviews} />
-            </main>
-          </div>
-        </div>
-      </div>
+      <ClientPageContent client={client} reviews={reviews} />
     </>
   );
 }
