@@ -1,7 +1,7 @@
 "use client";
-import { signIn } from "next-auth/react";
+import { signIn, useSession, SessionProvider } from "next-auth/react";
 import { useState, useEffect, Suspense } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 
 function SignInForm() {
   const params = useSearchParams();
@@ -10,10 +10,19 @@ function SignInForm() {
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [loading, setLoading] = useState(false);
   const error = params.get("error");
+  const { data: session, status } = useSession();
+  const router = useRouter();
 
   useEffect(() => {
     setIsSignUp(isSignUpParam);
   }, [isSignUpParam]);
+
+  useEffect(() => {
+    console.log("Session:", session);
+    console.log("Status:", status);
+    if (status === "loading") return;
+    if (session) router.replace("/dashboard");
+  }, [session, status, router]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
@@ -31,6 +40,14 @@ function SignInForm() {
     });
     setLoading(false);
   };
+
+  if (status === "authenticated") {
+    return <div>Redirecting...</div>;
+  }
+
+  if (status === "loading") {
+    return <div>Loading...</div>;
+  }
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center bg-[#18191A] text-white px-4">
@@ -130,8 +147,10 @@ function SignInForm() {
 
 export default function SignInPage() {
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <SignInForm />
-    </Suspense>
+    <SessionProvider>
+      <Suspense fallback={<div>Loading...</div>}>
+        <SignInForm />
+      </Suspense>
+    </SessionProvider>
   );
 }
