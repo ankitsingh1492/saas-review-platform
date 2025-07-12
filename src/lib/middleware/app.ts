@@ -16,6 +16,7 @@ export default async function AppMiddleware(req: NextRequest) {
     "/auth/error",
     "/widget",
     "/api/health",
+    "/",
   ];
 
   // API routes that should be handled separately
