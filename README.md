@@ -1,14 +1,10 @@
 # ReviewCraft 🌟
 
-[![Build Status](https://img.shields.io/github/actions/workflow/status/yourusername/review-platform/ci.yml?branch=main)](https://github.com/yourusername/review-platform/actions)
 [![Deploy Status](https://img.shields.io/website?url=https%3A%2F%2Fyour-app.vercel.app)](https://your-app.vercel.app)
 [![License](https://img.shields.io/github/license/yourusername/review-platform)](LICENSE)
-[![Version](https://img.shields.io/github/package-json/v/yourusername/review-platform)](package.json)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](CONTRIBUTING.md)
 
 > A modern, enterprise-grade review management platform built with Next.js 15, TypeScript, and Prisma.
-
-![ReviewCraft Dashboard](https://placeholder-for-screenshot.com/dashboard.png)
 
 ## ✨ Features
 
@@ -25,8 +21,7 @@
 
 ## 🚀 Live Demo
 
-**Production:** [https://your-app.vercel.app](https://your-app.vercel.app)  
-**Staging:** [https://staging-your-app.vercel.app](https://staging-your-app.vercel.app)
+**Production:** [https://your-app.vercel.app](https://saas-review-platform-kappa.vercel.app/)
 
 ## 📋 Tech Stack
 
@@ -53,57 +48,63 @@
 ### Installation
 
 1. **Clone the repository**
+
    ```bash
    git clone https://github.com/yourusername/review-platform.git
    cd review-platform
    ```
 
 2. **Install dependencies**
+
    ```bash
    pnpm install
    ```
 
 3. **Set up environment variables**
+
    ```bash
    cp .env.example .env.local
    ```
-   
+
    Configure the following variables in `.env.local`:
+
    ```env
    # Database
    DATABASE_URL="postgresql://username:password@localhost:5432/reviewcraft"
-   
+
    # NextAuth
    NEXTAUTH_URL="http://localhost:3000"
    NEXTAUTH_SECRET="your-secret-key"
-   
+
    # Google OAuth (optional)
    GOOGLE_CLIENT_ID="your-google-client-id"
    GOOGLE_CLIENT_SECRET="your-google-client-secret"
-   
+
    # App Configuration
    NEXT_PUBLIC_APP_NAME="ReviewCraft"
    ```
 
 4. **Set up the database**
+
    ```bash
    # Generate Prisma client
    pnpm prisma generate
-   
+
    # Run database migrations
    pnpm prisma migrate dev
-   
+
    # Seed the database (optional)
    pnpm prisma db seed
    ```
 
 5. **Start the development server**
+
    ```bash
    pnpm dev
    ```
 
 6. **Open your browser**
-   
+
    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
 
 ## 🛠️ Development
@@ -171,11 +172,13 @@ This project follows strict coding standards:
 The application provides a comprehensive REST API:
 
 ### Authentication
+
 - `POST /api/auth/signin` - User sign in
 - `POST /api/auth/signup` - User registration
 - `GET /api/auth/session` - Get current session
 
 ### Clients
+
 - `GET /api/clients` - List all clients
 - `POST /api/clients` - Create new client
 - `GET /api/clients/[id]` - Get client details
@@ -183,11 +186,13 @@ The application provides a comprehensive REST API:
 - `DELETE /api/clients/[id]` - Delete client
 
 ### Reviews
+
 - `GET /api/reviews` - List reviews
 - `POST /api/reviews` - Create review
 - `PUT /api/reviews/[id]` - Update review status
 
 ### Health Check
+
 - `GET /api/health` - Application health status
 
 ## 🚀 Deployment
@@ -195,6 +200,7 @@ The application provides a comprehensive REST API:
 ### Vercel (Recommended)
 
 1. **Deploy to Vercel**
+
    ```bash
    vercel --prod
    ```
