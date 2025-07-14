@@ -2,6 +2,7 @@
 import { signIn, useSession, SessionProvider } from "next-auth/react";
 import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { Loader2 } from "lucide-react";
 
 function SignInForm() {
   const params = useSearchParams();
@@ -9,6 +10,8 @@ function SignInForm() {
   const [isSignUp, setIsSignUp] = useState(isSignUpParam);
   const [form, setForm] = useState({ email: "", password: "", name: "" });
   const [loading, setLoading] = useState(false);
+  const [isGoogleLoading, setIsGoogleLoading] = useState(false);
+
   const error = params.get("error");
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -18,8 +21,6 @@ function SignInForm() {
   }, [isSignUpParam]);
 
   useEffect(() => {
-    console.log("Session:", session);
-    console.log("Status:", status);
     if (status === "loading") return;
     if (session) router.replace("/dashboard");
   }, [session, status, router]);
@@ -41,6 +42,18 @@ function SignInForm() {
     setLoading(false);
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsGoogleLoading(true);
+    try {
+      await signIn("google", { callbackUrl: "/dashboard" });
+    } catch (error) {
+      console.error("Google Sign In Error:", error);
+      router.push(
+        `/auth/error?error=${encodeURIComponent("Google sign-in failed")}`
+      );
+    }
+  };
+
   if (status === "authenticated") {
     return <div>Redirecting...</div>;
   }
@@ -59,7 +72,7 @@ function SignInForm() {
         </h1>
         <button
           className="w-full flex items-center justify-center gap-2 bg-white text-black rounded-md py-2 font-semibold hover:bg-gray-200 transition mb-4"
-          onClick={() => signIn("google", { callbackUrl: "/dashboard" })}
+          onClick={handleGoogleSignIn}
         >
           <svg width="20" height="20" viewBox="0 0 48 48">
             <g>
@@ -82,6 +95,7 @@ function SignInForm() {
             </g>
           </svg>
           Continue with Google
+          {isGoogleLoading && <Loader2 className="h-4 w-4 animate-spin" />}
         </button>
         <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
           {isSignUp && (
