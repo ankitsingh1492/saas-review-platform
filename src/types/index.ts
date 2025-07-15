@@ -94,3 +94,15 @@ export interface DashboardHeaderProps {
   userEmail?: string;
   children?: React.ReactNode;
 }
+
+// Testimonial Types
+export interface Testimonial {
+  initial: string;
+  name: string;
+  title: string;
+  company: string;
+  content: string;
+  avatarGradient: string;
+  borderHoverColor: string;
+  shadowHoverColor: string;
+}
