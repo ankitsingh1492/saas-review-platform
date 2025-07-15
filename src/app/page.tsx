@@ -17,58 +17,63 @@ export default function LandingPage() {
       content: `Since implementing ${process.env.NEXT_PUBLIC_APP_NAME}, our conversion rate increased by 45%. The authentic testimonials have completely transformed how prospects view our brand.`,
       avatarGradient: "from-violet-500 to-purple-500",
       borderHoverColor: "violet-500",
-      shadowHoverColor: "violet-500"
+      shadowHoverColor: "violet-500",
     },
     {
       initial: "M",
       name: "Marcus Rodriguez",
       title: "Founder",
       company: "GrowthLab",
-      content: "The automation features are incredible. We collect 3x more testimonials with half the effort. Our customers love how easy it is to leave feedback.",
+      content:
+        "The automation features are incredible. We collect 3x more testimonials with half the effort. Our customers love how easy it is to leave feedback.",
       avatarGradient: "from-cyan-500 to-blue-500",
       borderHoverColor: "cyan-500",
-      shadowHoverColor: "cyan-500"
+      shadowHoverColor: "cyan-500",
     },
     {
       initial: "E",
       name: "Emily Johnson",
       title: "VP Marketing",
       company: "InnovateCorp",
-      content: "ROI was immediate. Within the first month, we saw a 60% increase in qualified leads. The testimonial widgets look amazing on our site.",
+      content:
+        "ROI was immediate. Within the first month, we saw a 60% increase in qualified leads. The testimonial widgets look amazing on our site.",
       avatarGradient: "from-purple-500 to-pink-500",
       borderHoverColor: "purple-500",
-      shadowHoverColor: "purple-500"
+      shadowHoverColor: "purple-500",
     },
     {
       initial: "D",
       name: "David Kim",
       title: "Director",
       company: "E-commerce Plus",
-      content: "Customer trust increased significantly after implementing the review system. Our checkout completion rate improved by 35% in just 2 months.",
+      content:
+        "Customer trust increased significantly after implementing the review system. Our checkout completion rate improved by 35% in just 2 months.",
       avatarGradient: "from-emerald-500 to-teal-500",
       borderHoverColor: "emerald-500",
-      shadowHoverColor: "emerald-500"
+      shadowHoverColor: "emerald-500",
     },
     {
       initial: "L",
       name: "Lisa Thompson",
       title: "CMO",
       company: "ScaleUp Ventures",
-      content: "The analytics dashboard gives us insights we never had before. We can track which testimonials drive the most conversions. Game-changer!",
+      content:
+        "The analytics dashboard gives us insights we never had before. We can track which testimonials drive the most conversions. Game-changer!",
       avatarGradient: "from-orange-500 to-red-500",
       borderHoverColor: "orange-500",
-      shadowHoverColor: "orange-500"
+      shadowHoverColor: "orange-500",
     },
     {
       initial: "J",
       name: "James Wilson",
       title: "CEO",
       company: "Digital Dynamics",
-      content: "Setup was incredibly simple. Within minutes, we had beautiful testimonial widgets running on our site. The support team is fantastic too.",
+      content:
+        "Setup was incredibly simple. Within minutes, we had beautiful testimonial widgets running on our site. The support team is fantastic too.",
       avatarGradient: "from-indigo-500 to-purple-500",
       borderHoverColor: "indigo-500",
-      shadowHoverColor: "indigo-500"
-    }
+      shadowHoverColor: "indigo-500",
+    },
   ];
 
   useEffect(() => {
@@ -187,10 +192,10 @@ export default function LandingPage() {
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center mb-12 sm:mb-16 px-4">
             <button
-              className="group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold text-base sm:text-lg hover:from-violet-500 hover:to-purple-500 transition-all duration-300 shadow-2xl hover:shadow-violet-500/30 transform hover:-translate-y-1"
+              className="group px-6 sm:px-8 py-3 sm:py-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold text-base sm:text-lg hover:from-violet-500 hover:to-purple-500 transition-all duration-300 shadow-2xl hover:shadow-violet-500/30 transform hover:-translate-y-1 w-full sm:w-auto flex justify-center"
               onClick={() => router.push("/auth/signin?signup=true")}
             >
-              <span className="flex items-center gap-2">
+              <span className="flex items-center gap-2 justify-center w-full text-center">
                 Get Started Free
                 <svg
                   className="w-5 h-5 group-hover:translate-x-1 transition-transform"
@@ -208,7 +213,7 @@ export default function LandingPage() {
               </span>
             </button>
             <button
-              className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-slate-600 text-slate-300 font-semibold text-base sm:text-lg hover:border-violet-500 hover:text-white hover:bg-slate-800/50 transition-all duration-300 backdrop-blur-sm"
+              className="px-6 sm:px-8 py-3 sm:py-4 rounded-xl border border-slate-600 text-slate-300 font-semibold text-base sm:text-lg hover:border-violet-500 hover:text-white hover:bg-slate-800/50 transition-all duration-300 backdrop-blur-sm w-full sm:w-auto"
               onClick={() => router.push("/auth/signin")}
             >
               Sign in
@@ -229,17 +234,15 @@ export default function LandingPage() {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 px-4 sm:px-6">
               {testimonials.map((testimonial, index) => (
-                <TestimonialCard
-                  key={index}
-                  {...testimonial}
-                />
+                <TestimonialCard key={index} {...testimonial} />
               ))}
             </div>
 
             {/* Call-to-action below testimonials */}
             <div className="text-center mt-8 sm:mt-12 px-4">
               <p className="text-slate-400 mb-4 sm:mb-6 text-sm sm:text-base">
-                Join thousands of businesses building trust with authentic testimonials
+                Join thousands of businesses building trust with authentic
+                testimonials
               </p>
               <button
                 className="inline-flex items-center gap-2 px-4 sm:px-6 py-2 sm:py-3 text-sm sm:text-base rounded-lg bg-gradient-to-r from-violet-600/20 to-purple-600/20 border border-violet-500/30 text-violet-300 font-medium hover:from-violet-600/30 hover:to-purple-600/30 hover:text-white transition-all duration-200 backdrop-blur-sm"
