@@ -15,8 +15,10 @@ export default function ClientsSection({ clients }: ClientsSectionProps) {
     const query = searchQuery.toLowerCase();
     return clients.filter(
       (client) =>
-        client.name?.toLowerCase().includes(query) ||
-        client.domain?.toLowerCase().includes(query)
+        (client.name?.toLowerCase().startsWith(query) &&
+          client.name?.toLowerCase().includes(query)) ||
+        (client.domain?.toLowerCase().startsWith(query) &&
+          client.domain?.toLowerCase().includes(query))
     );
   }, [clients, searchQuery]);
 
