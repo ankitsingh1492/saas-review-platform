@@ -1,12 +1,30 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { NextResponse } from "next/server";
 import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { SessionUser } from "@/types";
+import { ratelimit } from "@/lib/upstash/ratelimit";
 
 // Create a new client
 export async function POST(request: Request) {
+  // Skip rate limiting in development
+  if (process.env.NODE_ENV !== "development") {
+    // Apply rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return new Response("Rate limit exceeded. Please try again later.", {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      });
+    }
+  }
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -63,6 +81,24 @@ export async function POST(request: Request) {
 
 // List all clients, or only those created by the current user if ?createdByMe=true
 export async function GET(request: Request) {
+  // Skip rate limiting in development
+  if (process.env.NODE_ENV !== "development") {
+    // Apply rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return new Response("Rate limit exceeded. Please try again later.", {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      });
+    }
+  }
+
   const session = await getServerSession(authOptions);
   if (!session) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -3,11 +3,31 @@ import prisma from "@/lib/prisma";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
 import { Prisma } from "@prisma/client";
+import { ratelimit } from "@/lib/upstash/ratelimit";
+
 // Get a single client by ID
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Skip rate limiting in development
+  if (process.env.NODE_ENV !== "development") {
+    // Apply rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return new Response("Rate limit exceeded. Please try again later.", {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      });
+    }
+  }
+
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
@@ -34,6 +54,24 @@ export async function PUT(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Skip rate limiting in development
+  if (process.env.NODE_ENV !== "development") {
+    // Apply rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return new Response("Rate limit exceeded. Please try again later.", {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      });
+    }
+  }
+
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
@@ -72,6 +110,24 @@ export async function DELETE(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
+  // Skip rate limiting in development
+  if (process.env.NODE_ENV !== "development") {
+    // Apply rate limiting
+    const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+
+    if (!success) {
+      return new Response("Rate limit exceeded. Please try again later.", {
+        status: 429,
+        headers: {
+          "X-RateLimit-Limit": limit.toString(),
+          "X-RateLimit-Remaining": remaining.toString(),
+          "X-RateLimit-Reset": reset.toString(),
+        },
+      });
+    }
+  }
+
   const resolvedParams = await params;
   const { id } = resolvedParams;
 
