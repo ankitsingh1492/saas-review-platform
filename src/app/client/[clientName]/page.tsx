@@ -12,10 +12,11 @@ interface PageProps {
 }
 
 async function getClientByName(name: string): Promise<Client | null> {
-  return prisma.client.findFirst({
-    where: { name: name },
+  const op = prisma.client.findFirst({
+    where: { name: { equals: name, mode: "insensitive" } },
     select: { id: true, name: true, domain: true },
   });
+  return op;
 }
 
 async function getReviewsByClientId(clientId: string): Promise<Review[]> {
