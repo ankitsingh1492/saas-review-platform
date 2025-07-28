@@ -21,7 +21,7 @@
 
 ## 🚀 Live Demo
 
-**Production:** [https://your-app.vercel.app](https://saas-review-platform-kappa.vercel.app/)
+**Production:** [live app](https://saas-review-platform-kappa.vercel.app/)
 
 ## 📋 Tech Stack
 
@@ -211,13 +211,7 @@ The application provides a comprehensive REST API:
 
 ### Docker
 
-```bash
-# Build the image
-docker build -t reviewcraft .
-
-# Run the container
-docker run -p 3000:3000 --env-file .env.local reviewcraft
-```
+TODO: update docker commands
 
 ### Environment Variables
 
@@ -254,23 +248,12 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 6. Push to the branch: `git push origin feature/amazing-feature`
 7. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
 ## 🙏 Acknowledgments
 
 - [Next.js](https://nextjs.org/) team for the amazing framework
 - [Vercel](https://vercel.com/) for hosting and deployment
 - [Prisma](https://www.prisma.io/) for the excellent ORM
 - [Tailwind CSS](https://tailwindcss.com/) for the utility-first CSS framework
-
-## 📞 Support
-
-- 📧 Email: support@reviewcraft.com
-- 🐛 Issues: [GitHub Issues](https://github.com/yourusername/review-platform/issues)
-- 💬 Discussions: [GitHub Discussions](https://github.com/yourusername/review-platform/discussions)
-- 📖 Documentation: [docs.reviewcraft.com](https://docs.reviewcraft.com)
 
 ---
 
